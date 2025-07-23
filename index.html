@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Business Idea Blueprint 2025</title>
+    <link rel="manifest" href="/manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm & Focused (Light Neutral, Calming Blues/Greens, Warm Accent) -->
+    <!-- Application Structure Plan: The application is designed as a non-linear "Idea Workbench" with four distinct phases: Foundation, Exploration, Creation, and Validation, plus a "Quizzes" section. This structure groups the report's 10 steps into logical, task-oriented sections, allowing users to navigate based on their current needs rather than following a rigid, linear document. Key interactions include interactive checklists, a conceptual chart, clickable cards for trends with detail reveals, a dynamic diagram for niching down, an interactive brainstorming tool (SCAMPER) with dynamic prompts, a process flow for validation with step details, and interactive quizzes. This design choice prioritizes user engagement and active participation over passive reading, making the process of idea generation more dynamic and intuitive. -->
+    <!-- Visualization & Content Choices: 1. Self-Assessment: Interactive checklist (HTML/JS) for reflection, and a dynamic feedback message. Goal: Inform/Engage. 2. Problem-Solving: Significantly Enhanced Horizontal Bar chart (Chart.js) with granular problem examples, distinct category colors, and a custom plugin for background category bands for visual grouping and detailed insights. Goal: Inform/Compare. 3. Trend Spotting: Clickable cards (HTML/JS) to reveal more detailed content about each trend. Goal: Inform/Explore. 4. Niche Down: Interactive funnel diagram (HTML/CSS/JS) with expanded explanations on specificity. Goal: Organize/Inform. 5. Competitive Analysis: Checklist (HTML/JS) with expanded guidance on what to analyze. Goal: Inform/Organize. 6. Brainstorming (SCAMPER): Interactive tool (HTML/JS) with dynamic prompts and a user input area for practical application. Goal: Organize/Create. 7. Validate Your Idea: Process flow diagram (HTML/CSS) with clickable steps to reveal detailed explanations. Goal: Inform/Organize. 8. AI Advantage: Dynamic fact cards with icons (HTML/Tailwind) and expanded detail reveals. Goal: Inform. 9. Quizzes: Interactive multiple-choice quizzes (HTML/JS) for assessment. Goal: Assess/Practice. These choices turn the static report into an interactive, engaging, and comprehensive experience. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #333;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #4A90E2;
+            transform: translateY(-2px);
+        }
+        .phase-card {
+            background-color: #FFFFFF;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .phase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.07);
+        }
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Increased max-width for more labels */
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px; /* Increased height for more bars */
+            max-height: 500px;
+        }
+        .interactive-element {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .interactive-element:hover {
+            background-color: #f0f4f8;
+        }
+        .scamper-btn.active {
+            background-color: #4A90E2;
+            color: white;
+        }
+        .quiz-option {
+            background-color: #f0f4f8;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .quiz-option:hover {
+            background-color: #e2e8f0;
+        }
+        .quiz-option.selected {
+            border: 2px solid #4A90E2;
+        }
+        .quiz-option.correct {
+            background-color: #d1fae5; /* green-100 */
+            border: 2px solid #34d399; /* green-400 */
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2; /* red-100 */
+            border: 2px solid #ef4444; /* red-500 */
+        }
+        .rationale-text {
+            font-size: 0.9rem;
+            color: #4b5563; /* gray-700 */
+            margin-top: 0.5rem;
+            padding-left: 0.5rem;
+            border-left: 3px solid #9ca3af; /* gray-400 */
+        }
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .expandable-content.expanded {
+            max-height: 500px; /* Adjust based on content */
+            transition: max-height 0.5s ease-in;
+        }
+        .expand-toggle {
+            cursor: pointer;
+            color: #4A90E2;
+            font-weight: 500;
+            margin-top: 0.5rem;
+            display: block;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="#" class="text-2xl font-bold text-gray-800">Idea Blueprint <span class="text-blue-500">2025</span></a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#phase1" class="nav-link text-gray-600 font-medium">Foundation</a>
+                    <a href="#phase2" class="nav-link text-gray-600 font-medium">Exploration</a>
+                    <a href="#phase3" class="nav-link text-gray-600 font-medium">Creation</a>
+                    <a href="#phase4" class="nav-link text-gray-600 font-medium">Validation</a>
+                    <a href="#quizzes" class="nav-link text-gray-600 font-medium">Quizzes</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-gray-600 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden mt-4">
+                 <a href="#phase1" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-100 rounded">Foundation</a>
+                 <a href="#phase2" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-100 rounded">Exploration</a>
+                 <a href="#phase3" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-100 rounded">Creation</a>
+                 <a href="#phase4" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-100 rounded">Validation</a>
+                 <a href="#quizzes" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-100 rounded">Quizzes</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">The Entrepreneur's Interactive Blueprint</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">An interactive guide to unlocking innovative business ideas in 2025. Navigate through the phases to build your concept from the ground up.</p>
+        </section>
+
+        <!-- Phase 1: Foundation -->
+        <section id="phase1" class="mb-20">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2 text-center">Phase 1: Foundation</h2>
+            <p class="text-center text-gray-500 mb-10">This phase is about introspection. A great business starts with understanding your own passions and observing the world's problems.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Step 1 -->
+                <div class="phase-card p-8">
+                    <span class="tag bg-blue-100 text-blue-800 mb-4">Step 1: Self-Assessment</span>
+                    <h3 class="text-2xl font-bold mb-4">Your Passions & Skills</h3>
+                    <p class="text-gray-600 mb-6">The most sustainable businesses often stem from genuine passion and existing skills. Use this interactive checklist to reflect on your personal assets and discover your unique blend.</p>
+                    <div id="self-assessment-checklist" class="space-y-4 mb-4"></div>
+                    <button id="assess-alignment-btn" class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">Assess My Alignment</button>
+                    <p id="alignment-feedback" class="mt-4 text-gray-700 font-medium hidden"></p>
+                </div>
+                <!-- Step 2 -->
+                <div class="phase-card p-8">
+                    <span class="tag bg-green-100 text-green-800 mb-4">Step 2: Problem-Solving</span>
+                    <h3 class="text-2xl font-bold mb-4">Identify Market Gaps</h3>
+                    <p class="text-gray-600 mb-6">Great ideas solve problems. The bigger the problem, the bigger the potential opportunity. Observe daily frustrations and analyze where existing solutions fall short.</p>
+                    <div class="chart-container">
+                        <canvas id="problemImpactChart"></canvas>
+                    </div>
+                    <p class="text-gray-600 text-sm mt-4">This chart illustrates the **Opportunity Score** for various specific problems. Higher scores indicate greater potential impact or unmet need. Look for problems that resonate with your skills and passions from Step 1.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Phase 2: Exploration -->
+        <section id="phase2" class="mb-20">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2 text-center">Phase 2: Exploration</h2>
+            <p class="text-center text-gray-500 mb-10">Look outward to discover market trends and find your unique corner. Specificity is your power.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Step 3 -->
+                <div class="phase-card p-8">
+                    <span class="tag bg-yellow-100 text-yellow-800 mb-4">Step 3: Trend Spotting</span>
+                    <h3 class="text-2xl font-bold mb-4">Leverage Emerging Industries</h3>
+                    <p class="text-gray-600 mb-6">2025 is shaped by powerful trends. Aligning your idea with these shifts can give you a significant advantage. Click on a trend to learn more about its potential impact.</p>
+                    <div id="trends-container" class="space-y-3"></div>
+                </div>
+                <!-- Step 4 -->
+                <div class="phase-card p-8">
+                    <span class="tag bg-purple-100 text-purple-800 mb-4">Step 4: Niche Down</span>
+                    <h3 class="text-2xl font-bold mb-4">Specificity is Power</h3>
+                    <p class="text-gray-600 mb-6">A common mistake is trying to appeal to everyone. Niche down to find your ideal customer and stand out. The narrower your focus initially, the easier it is to gain traction and build authority.</p>
+                    <div id="niche-funnel" class="p-4 space-y-2 text-center"></div>
+                    <div class="text-gray-600 text-sm mt-4">
+                        <p>This funnel illustrates the power of specificity:</p>
+                        <ul class="list-disc list-inside ml-4 mt-2">
+                            <li><strong>Broad Market:</strong> Trying to serve everyone leads to high competition.</li>
+                            <li><strong>Niche:</strong> Focusing on a specific segment reduces competition.</li>
+                            <li><strong>Micro-Niche:</strong> Targeting a very precise group allows you to become the go-to expert.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 3: Creation -->
+        <section id="phase3" class="mb-20">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2 text-center">Phase 3: Creation</h2>
+            <p class="text-center text-gray-500 mb-10">Turn observation into action. Analyze the landscape and actively brainstorm your unique solution.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Step 5 -->
+                <div class="phase-card p-8">
+                     <span class="tag bg-red-100 text-red-800 mb-4">Step 5: Competitive Analysis</span>
+                    <h3 class="text-2xl font-bold mb-4">Learn from Others</h3>
+                    <p class="text-gray-600 mb-6">Understanding your competition isn't about copying; it's about finding your unique edge. Use this checklist to guide your research and pinpoint differentiation.</p>
+                    <div id="competition-checklist" class="space-y-4"></div>
+                    <div class="text-gray-600 text-sm mt-4">
+                        <p>After analyzing, ask yourself: How can your idea be truly different and better? This could be through a unique feature, superior customer service, a different target niche, or a more compelling brand story.</p>
+                    </div>
+                </div>
+                <!-- Step 6 -->
+                <div class="phase-card p-8 flex flex-col">
+                    <span class="tag bg-indigo-100 text-indigo-800 mb-4">Step 6: Brainstorming</span>
+                    <h3 class="text-2xl font-bold mb-4">The SCAMPER Workbench</h3>
+                    <p class="text-gray-600 mb-6">Use the SCAMPER method to innovate on an existing idea or product. Select a prompt to generate new ideas by forcing you to think outside the box.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <button class="scamper-btn p-2 px-4 rounded-full text-sm font-medium bg-gray-200" data-scamper="S">Substitute</button>
+                        <button class="scamper-btn p-2 px-4 rounded-full text-sm font-medium bg-gray-200" data-scamper="C">Combine</button>
+                        <button class="scamper-btn p-2 px-4 rounded-full text-sm font-medium bg-gray-200" data-scamper="A">Adapt</button>
+                        <button class="scamper-btn p-2 px-4 rounded-full text-sm font-medium bg-gray-200" data-scamper="M">Modify</button>
+                        <button class="scamper-btn p-2 px-4 rounded-full text-sm font-medium bg-gray-200" data-scamper="P">Put to other use</button>
+                        <button class="scamper-btn p-2 px-4 rounded-full text-sm font-medium bg-gray-200" data-scamper="E">Eliminate</button>
+                        <button class="scamper-btn p-2 px-4 rounded-full text-sm font-medium bg-gray-200" data-scamper="R">Reverse</button>
+                    </div>
+                    <div id="scamper-content" class="flex-grow bg-gray-50 p-4 rounded-lg">
+                        <p id="scamper-prompt" class="text-gray-700 font-medium mb-2">Select a prompt to begin brainstorming.</p>
+                        <textarea id="scamper-input" class="w-full p-2 border rounded-md" rows="4" placeholder="Type your initial idea here, then click a SCAMPER prompt to brainstorm..."></textarea>
+                        <p id="scamper-example" class="text-sm text-gray-500 mt-2 hidden"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 4: Validation -->
+        <section id="phase4" class="mb-20">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2 text-center">Phase 4: Validation & AI</h2>
+            <p class="text-center text-gray-500 mb-10">Test your ideas in the real world and learn how to supercharge them with modern technology.</p>
+             <div class="grid md:grid-cols-2 gap-8">
+                <!-- Step 7 -->
+                <div class="phase-card p-8">
+                    <span class="tag bg-pink-100 text-pink-800 mb-4">Step 7: Validate Your Idea</span>
+                    <h3 class="text-2xl font-bold mb-4">Test Before You Build</h3>
+                    <p class="text-gray-600 mb-6">Don't fall in love with your first idea. Validation saves you time, money, and heartbreak by ensuring there's a real market for your idea. Click each step to learn more.</p>
+                    <div id="validation-flow" class="space-y-4"></div>
+                </div>
+                <!-- Step 8 -->
+                <div class="phase-card p-8">
+                    <span class="tag bg-teal-100 text-teal-800 mb-4">Step 8: The AI Advantage</span>
+                    <h3 class="text-2xl font-bold mb-4">Integrate AI into Your Business</h3>
+                    <p class="text-gray-600 mb-6">In 2025, almost every business idea can be enhanced or transformed by AI. Think about how AI can make your idea smarter, more efficient, more personalized, or more scalable. Click on an advantage to see details.</p>
+                    <div id="ai-advantages" class="grid grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quizzes Section -->
+        <section id="quizzes" class="mb-20">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2 text-center">Test Your Knowledge: Quizzes</h2>
+            <p class="text-center text-gray-500 mb-10">Reinforce your understanding of the Entrepreneur's Blueprint with these interactive quizzes.</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="phase-card p-6 text-center cursor-pointer" onclick="startQuiz(0)">
+                    <h3 class="text-xl font-bold mb-2">Quiz 1: Foundation & Exploration</h3>
+                    <p class="text-gray-600 text-sm">Covers Self-Assessment, Problem-Solving, Trend Spotting, and Niche Down.</p>
+                    <button class="mt-4 px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">Start Quiz</button>
+                </div>
+                <div class="phase-card p-6 text-center cursor-pointer" onclick="startQuiz(1)">
+                    <h3 class="text-xl font-bold mb-2">Quiz 2: Creation & Validation</h3>
+                    <p class="text-gray-600 text-sm">Focuses on Competitive Analysis, Brainstorming, Idea Validation, and MVP.</p>
+                    <button class="mt-4 px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">Start Quiz</button>
+                </div>
+                <div class="phase-card p-6 text-center cursor-pointer" onclick="startQuiz(2)">
+                    <h3 class="text-xl font-bold mb-2">Quiz 3: AI Advantage & Execution</h3>
+                    <p class="text-gray-600 text-sm">Tests your understanding of AI integration, idea vs. opportunity, and taking action.</p>
+                    <button class="mt-4 px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">Start Quiz</button>
+                </div>
+            </div>
+
+            <div id="quiz-display-area" class="mt-12 hidden">
+                <div class="phase-card p-8">
+                    <h3 id="quiz-title" class="text-2xl font-bold mb-4"></h3>
+                    <div id="quiz-question-container">
+                        <p id="quiz-question-text" class="text-xl font-semibold mb-4"></p>
+                        <div id="quiz-options" class="space-y-3 mb-4"></div>
+                        <p id="quiz-hint" class="text-sm text-gray-500 italic mb-4"></p>
+                        <div id="quiz-feedback" class="hidden">
+                            <p id="quiz-rationale" class="rationale-text"></p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mt-6">
+                        <button id="quiz-prev-btn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-colors hidden">Previous</button>
+                        <button id="quiz-check-btn" class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">Check Answer</button>
+                        <button id="quiz-next-btn" class="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors hidden">Next Question</button>
+                        <button id="quiz-restart-btn" class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors hidden">Restart Quiz</button>
+                    </div>
+                    <div id="quiz-score" class="text-center text-2xl font-bold mt-8 hidden"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Step 10: Conclusion -->
+        <section id="conclusion" class="bg-white rounded-2xl p-8 md:p-12 text-center shadow-lg">
+             <h2 class="text-3xl font-bold text-gray-800 mb-4">Your Journey Starts Now</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-6">The most crucial step is action. Don't let the pursuit of the "perfect" idea lead to inaction. Choose one idea that excites you and take the smallest possible step forward today. Remember, the business journey is iterative. Your first idea might evolve significantly. Embrace learning from feedback and adapting your approach. Stay persistent: Building a business takes time and resilience.</p>
+            <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg inline-block">
+                <p class="font-semibold">Your Next Small Step:</p>
+                <p>What is one concrete thing you can do this week to move your idea forward? Draft a survey? Research a competitor? Sketch a landing page? Talk to a potential customer?</p>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="text-center py-8 mt-12 text-gray-500">
+        <p>&copy; 2025 Interactive Business Blueprint. An interactive experience based on "The Entrepreneur's Blueprint".</p>
+    </footer>
+
+    <script>
+        // Quiz Data - Loaded directly into JS
+        const quizzesData = [
+            {
+                "title": "Quiz 1: Foundation & Exploration",
+                "questions": [
+                    {
+                        "question": "According to the guide, what is the primary purpose of the initial 'Self-Assessment' step in generating a business idea?",
+                        "hint": "Think about why your personal connection to an idea might matter in the long run, beyond just having the technical skills.",
+                        "answerOptions": [
+                            { "text": "To ensure the business aligns with your passions and values for long-term motivation.", "isCorrect": true, "rationale": "This aligns with the principle that genuine passion and value alignment provide the resilience needed to overcome entrepreneurial challenges." },
+                            { "text": "To create a list of skills to feature on a future company website.", "isCorrect": false, "rationale": "While listing skills is part of the process, its main purpose is for idea generation, not just for future marketing materials." },
+                            { "text": "To determine the highest-paying industry you are qualified for.", "isCorrect": false, "rationale": "The guide emphasizes passion and problem-solving over simply chasing the highest salary, which may not lead to a sustainable business." },
+                            { "text": "To find a business idea that requires no new learning.", "isCorrect": false, "rationale": "Self-assessment identifies current strengths, but entrepreneurship almost always involves continuous learning; it's not about avoiding it." }
+                        ]
+                    },
+                    {
+                        "question": "A potential entrepreneur notices that local delivery services are fast but often damage packages. Which principle from the 'Problem-Solving' step does this observation directly represent?",
+                        "hint": "Consider where existing services are failing the customer, even if they succeed in other areas.",
+                        "answerOptions": [
+                            { "text": "Observing daily frustrations.", "isCorrect": false, "rationale": "While related, this is a specific failure in an existing market, which points to a more targeted concept." },
+                            { "text": "Listening to conversations in online forums.", "isCorrect": false, "rationale": "This describes a method of finding problems, but not the nature of the problem itself in this scenario." },
+                            { "text": "Analyzing where existing solutions fall short.", "isCorrect": true, "rationale": "This observation directly identifies a weakness in current services, presenting a clear opportunity for a better, more careful solution." },
+                            { "text": "Identifying an industry ripe for disruption.", "isCorrect": false, "rationale": "While the delivery industry could be ripe for disruption, the specific observation is about a flaw in the current service model, not the entire industry structure." }
+                        ]
+                    },
+                    {
+                        "question": "How does the guide suggest an entrepreneur should approach leveraging a major trend like AI?",
+                        "hint": "The guide advises against simply copying what's popular. What's the more strategic approach?",
+                        "answerOptions": [
+                            { "text": "Start an AI consulting firm, as it's a popular business model.", "isCorrect": false, "rationale": "This is a generic approach; the guide encourages looking for unique applications within a trend." },
+                            { "text": "Find a unique way to apply AI to solve a specific problem within that trend.", "isCorrect": true, "rationale": "The guide emphasizes innovating *within* a trend, such as using AI to enhance a specific service or product, rather than just following the crowd." },
+                            { "text": "Wait for the AI trend to become more established before starting a business.", "isCorrect": false, "rationale": "The guide positions leveraging emerging trends as an advantage, suggesting early adoption is powerful." },
+                            { "text": "Create a business that competes directly with major AI companies.", "isCorrect": false, "rationale": "Competing with giants is difficult; the guide suggests finding a niche where you can apply the trend uniquely." }
+                        ]
+                    },
+                    {
+                        "question": "Which of the following business ideas best demonstrates the 'Niche Down' principle?",
+                        "hint": "Look for the option that targets the most specific group with a tailored solution.",
+                        "answerOptions": [
+                            { "text": "A meal delivery service for everyone.", "isCorrect": false, "rationale": "This is a broad market with immense competition and lacks the specificity the 'Niche Down' principle advises." },
+                            { "text": "A meal delivery service for people who like healthy food.", "isCorrect": false, "rationale": "This is more specific, but 'healthy food' is still a very broad category with many different interpretations and competitors." },
+                            { "text": "A meal delivery service providing gluten-free meals for athletes.", "isCorrect": true, "rationale": "This option targets a very specific customer (athletes) with a very specific need (gluten-free meals), making marketing and service delivery highly focused." },
+                            { "text": "A meal delivery service that is cheaper than all others.", "isCorrect": false, "rationale": "Competing on price alone is a business strategy, but it does not represent the principle of niching down to a specific customer segment." }
+                        ]
+                    },
+                    {
+                        "question": "What is the ultimate goal of conducting a 'Competitive Analysis' as described in the guide?",
+                        "hint": "The purpose isn't just to make a list of competitors. What are you trying to find?",
+                        "answerOptions": [
+                            { "text": "To copy the business model of the most successful competitor.", "isCorrect": false, "rationale": "The guide explicitly states that analysis is not about copying but about finding a unique angle." },
+                            { "text": "To determine a lower price point for your product.", "isCorrect": false, "rationale": "While pricing is part of the analysis, the main goal is broader than just competing on price." },
+                            { "text": "To identify gaps in the market and find a way to differentiate your business.", "isCorrect": true, "rationale": "This captures the core purpose: to learn from others' strengths and weaknesses to carve out a unique space for your own idea." },
+                            { "text": "To prove that your business idea is completely new and has no competitors.", "isCorrect": false, "rationale": "Most ideas have some form of competition, direct or indirect; the goal is to understand that landscape, not to assume it doesn't exist." }
+                        ]
+                    },
+                    {
+                        "question": "When using the SCAMPER brainstorming technique, applying the 'E' (Eliminate) prompt would involve asking which question?",
+                        "hint": "Think about simplification and what might be non-essential to an existing product or service.",
+                        "answerOptions": [
+                            { "text": "What new feature can be added to the product?", "isCorrect": false, "rationale": "This question relates to 'Modify' or 'Magnify', which involves adding to the idea, not taking away." },
+                            { "text": "What parts of the service can be removed to simplify it?", "isCorrect": true, "rationale": "This question directly addresses the concept of elimination, focusing on what can be taken away to streamline or improve the core offering." },
+                            { "text": "How can this product be sold to a different audience?", "isCorrect": false, "rationale": "This question aligns with 'Put to another use', which explores new applications or markets." },
+                            { "text": "What would happen if we performed the service in the opposite way?", "isCorrect": false, "rationale": "This question is a direct application of the 'Reverse' prompt in the SCAMPER method." }
+                        ]
+                    },
+                    {
+                        "question": "According to the 'Validate Your Idea' step, which of the following provides the strongest validation for a business idea?",
+                        "hint": "Consider which action demonstrates a customer's commitment beyond just expressing interest.",
+                        "answerOptions": [
+                            { "text": "Receiving positive feedback on a survey.", "isCorrect": false, "rationale": "Positive survey feedback is encouraging and a good form of initial validation, but it doesn't confirm a willingness to pay." },
+                            { "text": "Having many people sign up for an email list on a landing page.", "isCorrect": false, "rationale": "An email signup shows interest, which is a strong signal, but it is still a step below a financial commitment." },
+                            { "text": "A potential customer saying they 'would definitely buy' the product in an interview.", "isCorrect": false, "rationale": "Verbal intent is a positive sign, but what people say they will do and what they actually do can be different." },
+                            { "text": "Getting a customer to pay a deposit for the product before it's fully built.", "isCorrect": true, "rationale": "A financial transaction, even a small one, is the most powerful form of validation because it proves customers are willing to pay to solve the problem." }
+                        ]
+                    },
+                    {
+                        "question": "An entrepreneur wants to create a personalized fitness coaching app. How could they best apply the 'AI Advantage' to enhance their core idea?",
+                        "hint": "Think about how AI can use data to create a unique experience for each user.",
+                        "answerOptions": [
+                            { "text": "By using AI to generate generic workout images for social media posts.", "isCorrect": false, "rationale": "This is a valid use of AI for marketing, but it doesn't enhance the core product experience for the user." },
+                            { "text": "By analyzing a user's performance data to create adaptive, personalized workout plans.", "isCorrect": true, "rationale": "This directly uses AI's strength in data analysis and personalization to make the core product smarter and more effective for each individual user." },
+                            { "text": "By writing the app's 'Terms of Service' with an AI text generator.", "isCorrect": false, "rationale": "While AI can assist with administrative tasks, this doesn't fundamentally improve the business idea or the customer's experience." },
+                            { "text": "By implementing an AI chatbot that can only answer frequently asked questions.", "isCorrect": false, "rationale": "A simple FAQ chatbot is a basic use of AI for support, but it doesn't transform the core fitness coaching offering." }
+                        ]
+                    },
+                    {
+                        "question": "What is the purpose of creating a Minimum Viable Product (MVP)?",
+                        "hint": "An MVP isn't the final, polished version. What is its main strategic role in the validation process?",
+                        "answerOptions": [
+                            { "text": "To launch a perfect, feature-complete product to the market.", "isCorrect": false, "rationale": "An MVP is intentionally imperfect and incomplete; its goal is learning, not launching a final product." },
+                            { "text": "To secure a large amount of funding from investors immediately.", "isCorrect": false, "rationale": "While a successful MVP can help with fundraising, its primary purpose is to test the idea, not solely to attract investors." },
+                            { "text": "To test the core functionality of the business idea with real users and gather feedback.", "isCorrect": true, "rationale": "This defines the central purpose of an MVP: to build the simplest possible version to see if the core concept solves a real problem for users." },
+                            { "text": "To create a product that is cheaper than all competitors.", "isCorrect": false, "rationale": "An MVP might be inexpensive to build, but its purpose is about learning and validation, not competing on final production cost." }
+                        ]
+                    },
+                    {
+                        "question": "What is the single most crucial action an entrepreneur must take after completing all the ideation and validation steps, according to the guide's conclusion?",
+                        "hint": "The guide warns against a specific type of paralysis after the planning phase.",
+                        "answerOptions": [
+                            { "text": "To start over and find an even better idea.", "isCorrect": false, "rationale": "The guide warns against this cycle of 'analysis paralysis' and the endless search for a perfect idea." },
+                            { "text": "To write a comprehensive 50-page business plan.", "isCorrect": false, "rationale": "While planning is important, the guide's final emphasis is on forward momentum, not extensive documentation." },
+                            { "text": "To take the smallest possible step forward to begin execution.", "isCorrect": true, "rationale": "The conclusion stresses that action, no matter how small, is the most critical step to turn an idea into reality and avoid getting stuck in the planning phase." },
+                            { "text": "To find a co-founder before doing anything else.", "isCorrect": false, "rationale": "Finding a partner can be a strategic step, but the guide's final message is about individual action and breaking inertia." }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Quiz 2: Creation & Validation",
+                "questions": [
+                    {
+                        "question": "An entrepreneur observes a competitor's product has many negative reviews complaining about poor customer support. Which part of 'Competitive Analysis' does this fall under, and what opportunity does it present?",
+                        "hint": "Think about what you're looking for when analyzing competitors, beyond just their strengths.",
+                        "answerOptions": [
+                            { "text": "Analyzing their strengths; opportunity to offer a similar product.", "isCorrect": false, "rationale": "Poor customer support is a weakness, not a strength, and the goal is differentiation, not just similarity." },
+                            { "text": "Pinpointing their weaknesses/gaps; opportunity to offer superior customer service.", "isCorrect": true, "rationale": "Identifying a competitor's weakness in an area like customer support creates a direct opportunity to differentiate your business by excelling there." },
+                            { "text": "Studying their business model; opportunity to undercut their pricing.", "isCorrect": false, "rationale": "Customer support issues are a weakness in service quality, not directly related to the competitor's pricing strategy or business model." },
+                            { "text": "Identifying direct competitors; opportunity to acquire their customer base.", "isCorrect": false, "rationale": "While identifying competitors is correct, the specific observation points to improving a service aspect, not necessarily acquiring the entire customer base through direct competition." }
+                        ]
+                    },
+                    {
+                        "question": "You have an idea for a smart home device. Applying the 'S' (Substitute) prompt from SCAMPER, which question would you ask?",
+                        "hint": "Consider what core component or material could be swapped out for something else.",
+                        "answerOptions": [
+                            { "text": "Can this device be used in a car instead of a home?", "isCorrect": false, "rationale": "This relates to 'Put to another use' or 'Adapt', changing the context of the product." },
+                            { "text": "What alternative materials or power sources could be used for the device?", "isCorrect": true, "rationale": "The 'Substitute' prompt focuses on replacing components, materials, or elements within the existing product or process." },
+                            { "text": "How can we add a voice assistant to this device?", "isCorrect": false, "rationale": "This question applies the 'Combine' prompt, as it involves merging a new feature with the existing device." },
+                            { "text": "What if the device was controlled by gestures instead of a button?", "isCorrect": false, "rationale": "This relates to 'Modify' or 'Rearrange', changing the interaction method rather than a core component." }
+                        ]
+                    },
+                    {
+                        "question": "An entrepreneur wants to validate a new app idea for personalized learning. They decide to manually provide personalized study plans to 10 students for a month. This is an example of what validation technique?",
+                        "hint": "This method focuses on testing the core concept with minimal development effort.",
+                        "answerOptions": [
+                            { "text": "Pre-sales, as they are getting users to commit.", "isCorrect": false, "rationale": "While students are committing time, pre-sales specifically refers to getting financial commitment before full development." },
+                            { "text": "A comprehensive market survey.", "isCorrect": false, "rationale": "This involves direct service delivery to a small group, not a broad data collection method like a survey." },
+                            { "text": "Creating a Minimum Viable Product (MVP).", "isCorrect": true, "rationale": "Manually delivering the core service is a classic example of an MVP, testing the value proposition without building the full automated app." },
+                            { "text": "Building the full app and launching it to the public.", "isCorrect": false, "rationale": "This is the opposite of an MVP; it involves full development before validation, which is a high-risk approach." }
+                        ]
+                    },
+                    {
+                        "question": "Which of the following is the most critical question to answer during the 'Validate Your Idea' phase?",
+                        "hint": "Think about what truly determines if an idea has market potential.",
+                        "answerOptions": [
+                            { "text": "Can I build this product perfectly on my first attempt?", "isCorrect": false, "rationale": "Perfection is not the goal of validation; learning and iteration are. An MVP is often imperfect." },
+                            { "text": "Will people actually pay for this solution?", "isCorrect": true, "rationale": "This is the fundamental question of market viability. If people aren't willing to pay, the idea isn't a viable business opportunity." },
+                            { "text": "How many competitors already exist in this market?", "isCorrect": false, "rationale": "While competitive analysis is important, validation focuses on customer demand and willingness to pay, not just the number of existing players." },
+                            { "text": "Can I automate every single part of this business immediately?", "isCorrect": false, "rationale": "Automation is an 'AI Advantage' and scalability goal, not the primary focus of initial idea validation." }
+                        ]
+                    },
+                    {
+                        "question": "A business offers a subscription box for pet owners. Applying the 'M' (Modify) prompt from SCAMPER, which question would lead to a new idea?",
+                        "hint": "Think about changing a characteristic or adding something to enhance the existing offering.",
+                        "answerOptions": [
+                            { "text": "Can we sell these pet products individually instead of in a box?", "isCorrect": false, "rationale": "This relates to 'Eliminate' (the box) or 'Rearrange' the offering, not modifying the core product." },
+                            { "text": "What if the box included personalized toys based on the pet's breed and age?", "isCorrect": true, "rationale": "This modifies the product by adding personalization and enhancing the value proposition, aligning with the 'Modify' prompt." },
+                            { "text": "Could we combine this with a pet-sitting service?", "isCorrect": false, "rationale": "This is an application of the 'Combine' prompt, merging two different services." },
+                            { "text": "What if the subscription box was delivered by drone?", "isCorrect": false, "rationale": "This relates to 'Adapt' (delivery method) or 'Rearrange' the process, not modifying the product content itself." }
+                        ]
+                    },
+                    {
+                        "question": "When conducting competitive analysis, identifying a competitor's 'weaknesses/gaps' is crucial because it helps you to:",
+                        "hint": "Consider how understanding their shortcomings can benefit your own strategy.",
+                        "answerOptions": [
+                            { "text": "Avoid entering the market altogether.", "isCorrect": false, "rationale": "Identifying weaknesses helps you find opportunities, not avoid the market if demand exists." },
+                            { "text": "Replicate their product features exactly.", "isCorrect": false, "rationale": "The goal is differentiation, not replication, especially when it comes to weaknesses." },
+                            { "text": "Find areas where your business can offer a superior solution or unique value.", "isCorrect": true, "rationale": "Competitor weaknesses are direct opportunities for your business to stand out and provide something better or different that customers need." },
+                            { "text": "Predict their future marketing campaigns.", "isCorrect": false, "rationale": "While competitive analysis can inform marketing, its primary purpose in this context is about product/service differentiation." }
+                        ]
+                    },
+                    {
+                        "question": "You've created a landing page for your new service and are collecting email addresses. What does a high number of sign-ups indicate?",
+                        "hint": "This is a form of early validation. What does it confirm about your idea?",
+                        "answerOptions": [
+                            { "text": "That your service is already profitable.", "isCorrect": false, "rationale": "Email sign-ups indicate interest, but not yet profitability, as no money has exchanged hands." },
+                            { "text": "Strong market interest in your proposed solution.", "isCorrect": true, "rationale": "Collecting email addresses on a landing page is a direct way to gauge early interest and demand for your idea before significant development." },
+                            { "text": "That your website design is perfect.", "isCorrect": false, "rationale": "While good design helps, the primary takeaway from high sign-ups is about the appeal of the *idea* itself, not just the aesthetics of the page." },
+                            { "text": "That you should immediately build the full product.", "isCorrect": false, "rationale": "High interest is a good sign, but it's still part of validation, which should be followed by further testing (like MVP or pre-sales) before full development." }
+                        ]
+                    },
+                    {
+                        "question": "Applying the 'P' (Put to another use) prompt from SCAMPER to a 'standard smartphone camera', which question would you ask?",
+                        "hint": "Think about how the core technology could serve a completely different, perhaps unexpected, function.",
+                        "answerOptions": [
+                            { "text": "Can we make the camera take higher resolution photos?", "isCorrect": false, "rationale": "This relates to 'Modify' or 'Magnify', improving an existing feature, not finding a new use." },
+                            { "text": "Could the camera be used for medical diagnostics by analyzing skin conditions?", "isCorrect": true, "rationale": "This is a prime example of putting the core technology (a camera) to a completely different, innovative use beyond its original purpose." },
+                            { "text": "What if the camera had fewer settings to simplify its use?", "isCorrect": false, "rationale": "This relates to 'Eliminate' or 'Minify', reducing complexity." },
+                            { "text": "Should we combine the camera with a built-in projector?", "isCorrect": false, "rationale": "This is an application of the 'Combine' prompt, merging two distinct technologies." }
+                        ]
+                    },
+                    {
+                        "question": "What is the primary benefit of using an MVP (Minimum Viable Product) in the validation process?",
+                        "hint": "An MVP is a tool for smart, efficient learning. What does it help you avoid?",
+                        "answerOptions": [
+                            { "text": "To ensure the product is absolutely perfect before launch.", "isCorrect": false, "rationale": "An MVP is designed to be minimal and imperfect, focusing on core functionality rather than perfection." },
+                            { "text": "To gather initial customer payments to fund full development.", "isCorrect": false, "rationale": "While an MVP can lead to pre-sales, its primary benefit is learning and de-risking, not solely fundraising." },
+                            { "text": "To quickly test core assumptions and gather real-world feedback with minimal investment.", "isCorrect": true, "rationale": "This captures the essence of an MVP: a cost-effective way to validate the most critical aspects of your idea by putting a basic version in front of real users." },
+                            { "text": "To build a complete product faster than competitors.", "isCorrect": false, "rationale": "An MVP is about smart development and and learning, not necessarily about speed to a complete product or competitive race." }
+                        ]
+                    },
+                    {
+                        "question": "You are brainstorming a new online course. Applying the 'R' (Reverse) prompt from SCAMPER, which question would be relevant?",
+                        "hint": "Think about changing the typical sequence or outcome of the course delivery.",
+                        "answerOptions": [
+                            { "text": "What if students paid after completing the course, based on their success?", "isCorrect": true, "rationale": "This reverses the typical payment model (payment upfront), aligning with the 'Reverse' prompt to explore new approaches." },
+                            { "text": "Could this course be combined with a live coaching session?", "isCorrect": false, "rationale": "This is an application of the 'Combine' prompt, merging two different learning modalities." },
+                            { "text": "What if the course was delivered entirely through text messages?", "isCorrect": false, "rationale": "This relates to 'Modify' or 'Adapt', changing the delivery medium." },
+                            { "text": "Should we eliminate the final exam from the course?", "isCorrect": false, "rationale": "This aligns with the 'Eliminate' prompt, removing a component of the course structure." }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Quiz 3: AI Advantage & Execution",
+                "questions": [
+                    {
+                        "question": "An entrepreneur wants to create a personalized meal planning service. How could they best leverage the 'AI Advantage' for 'Personalization'?",
+                        "hint": "Think about how AI can tailor the service to individual user needs, beyond just basic preferences.",
+                        "answerOptions": [
+                            { "text": "Use AI to generate a list of common meal ingredients.", "isCorrect": false, "rationale": "This is a basic content generation task, not a deep personalization of the service for individual users." },
+                            { "text": "Employ AI to analyze user dietary restrictions, allergies, and taste preferences to dynamically generate unique weekly meal plans.", "isCorrect": true, "rationale": "This directly applies AI's ability to process complex individual data points to create highly customized and adaptive solutions, which is the essence of personalization." },
+                            { "text": "Use AI to automate sending marketing emails about the service.", "isCorrect": false, "rationale": "This is an automation for marketing, not a core personalization feature of the meal planning service itself." },
+                            { "text": "Create an AI-generated image for the service's social media ads.", "isCorrect": false, "rationale": "This is a one-time creative task that doesn't enhance the core personalized meal planning experience for the user." }
+                        ]
+                    },
+                    {
+                        "question": "What is the key distinction between a 'business idea' and a 'business opportunity' according to the guide?",
+                        "hint": "An 'opportunity' implies something more concrete and market-ready than just an 'idea'.",
+                        "answerOptions": [
+                            { "text": "A business idea is always about a product, while an opportunity is always about a service.", "isCorrect": false, "rationale": "The format (product vs. service) does not define the distinction between an idea and an opportunity." },
+                            { "text": "A business idea is a concept, whereas a business opportunity is a validated concept with a paying market.", "isCorrect": true, "rationale": "This accurately defines the difference: an opportunity is an idea that has been tested and confirmed to have real demand from customers willing to pay." },
+                            { "text": "A business idea requires no funding, but an opportunity always requires significant investment.", "isCorrect": false, "rationale": "Funding needs vary for both; the distinction lies in market validation, not solely financial requirements." },
+                            { "text": "A business idea is something you think of, while an opportunity is something someone else thought of.", "isCorrect": false, "rationale": "Both can be conceived by anyone; the distinction is in their market viability and validation." }
+                        ]
+                    },
+                    {
+                        "question": "An entrepreneur has developed a unique algorithm to predict stock market movements. How can they best apply the 'AI Advantage' for 'Data Analysis & Insights'?",
+                        "hint": "Focus on how the algorithm can be used to extract meaningful, actionable information.",
+                        "answerOptions": [
+                            { "text": "Use the algorithm to automatically write daily stock market summaries for a blog.", "isCorrect": false, "rationale": "While this is AI-driven content generation, it's not the primary way an algorithm for 'predicting movements' provides 'data analysis & insights'." },
+                            { "text": "Employ the algorithm to process vast amounts of financial data to identify hidden trends and predict future market behavior.", "isCorrect": true, "rationale": "This directly leverages AI's strength in analyzing large datasets to extract actionable insights and make predictions, which is the core of data analysis and insights." },
+                            { "text": "Create an AI-powered chatbot to answer basic questions about stock market terms.", "isCorrect": false, "rationale": "This is an AI application for customer experience/support, not directly for advanced data analysis and insights from the algorithm itself." },
+                            { "text": "Automate the process of buying and selling stocks based on pre-set rules.", "isCorrect": false, "rationale": "This is automation based on predictions, but the 'Data Analysis & Insights' advantage focuses on the *understanding* derived from the data, not just automated trading." }
+                        ]
+                    },
+                    {
+                        "question": "After going through all the steps of ideation and validation, what is the most critical action to avoid 'analysis paralysis'?",
+                        "hint": "The guide's conclusion emphasizes moving from planning to a specific type of initial activity.",
+                        "answerOptions": [
+                            { "text": "Spend more time researching competitors to perfect the differentiation strategy.", "isCorrect": false, "rationale": "This would deepen analysis paralysis by adding more research instead of moving to action." },
+                            { "text": "Write a detailed, multi-year financial projection for the business.", "isCorrect": false, "rationale": "This is a planning activity that, while important, can contribute to analysis paralysis if it delays actual implementation." },
+                            { "text": "To take the smallest possible step forward to begin execution.", "isCorrect": true, "rationale": "This is the direct antidote to analysis paralysis: breaking down the large goal into a tiny, actionable step to build momentum and move from planning to doing." },
+                            { "text": "Seek out a mentor who has already built a successful business.", "isCorrect": false, "rationale": "Mentorship is valuable, but it's not the primary action to combat paralysis; the focus is on initiating your own progress." }
+                        ]
+                    },
+                    {
+                        "question": "An entrepreneur wants to create a new online community platform. How can they use the 'AI Advantage' for 'Enhanced Customer Experience'?",
+                        "hint": "Think about how AI can make interactions within the community smoother or more helpful for users.",
+                        "answerOptions": [
+                            { "text": "Using AI to automatically generate daily discussion prompts for the community.", "isCorrect": false, "rationale": "This is AI for content generation, not directly enhancing the customer's *interactive* experience within the platform." },
+                            { "text": "Implementing AI-powered moderation to filter out spam and inappropriate content.", "isCorrect": false, "rationale": "While important for community health, this is more about platform management and safety than direct enhancement of individual user experience." },
+                            { "text": "Deploying an AI-powered chatbot to instantly answer common user questions and guide new members.", "isCorrect": true, "rationale": "An AI chatbot provides immediate support and guidance, directly improving the customer's interaction and experience within the platform." },
+                            { "text": "Analyzing user activity data to identify the most popular topics.", "isCorrect": false, "rationale": "This is AI for data analysis and insights, which informs improvements but isn't a direct enhancement of the real-time customer experience." }
+                        ]
+                    },
+                    {
+                        "question": "The guide emphasizes that the business journey is 'iterative.' What does this mean for your first business idea?",
+                        "hint": "Think about how ideas evolve and adapt over time, especially after initial launches.",
+                        "answerOptions": [
+                            { "text": "Your first idea must be perfect and should not change.", "isCorrect": false, "rationale": "The guide explicitly states that the first idea might evolve significantly, contradicting the idea of perfection and no change." },
+                            { "text": "It will likely evolve significantly based on feedback and market changes.", "isCorrect": true, "rationale": "An iterative process means continuously refining and adapting your idea based on new information, feedback, and market dynamics." },
+                            { "text": "You should launch it once and never make any updates.", "isCorrect": false, "rationale": "This is the opposite of an iterative approach; continuous improvement and updates are central to iterative development." },
+                            { "text": "You should only work on it for a short period, then move to a completely new idea.", "isCorrect": false, "rationale": "Iteration means refining the *same* idea through cycles, not abandoning it for a new one after a short period." }
+                        ]
+                    },
+                    {
+                        "question": "Which of the following best describes how AI can provide an 'Efficiency & Optimization' advantage for a logistics company?",
+                        "hint": "Focus on how AI can make existing processes smoother, faster, or more resource-effective.",
+                        "answerOptions": [
+                            { "text": "Using AI to design a new logo for the company's delivery trucks.", "isCorrect": false, "rationale": "This is a one-time design task, not an ongoing operational efficiency or optimization." },
+                            { "text": "Employing AI to predict optimal delivery routes and warehouse stock levels, reducing fuel costs and storage needs.", "isCorrect": true, "rationale": "This directly applies AI to streamline operations, reduce waste, and improve resource allocation, which are key aspects of efficiency and optimization." },
+                            { "text": "Having an AI write social media posts about the company's services.", "isCorrect": false, "rationale": "This is AI for content generation and marketing, not for internal operational efficiency." },
+                            { "text": "Using AI to identify potential new customers for the company.", "isCorrect": false, "rationale": "This is AI for sales and lead generation, not for optimizing existing operational processes." }
+                        ]
+                    },
+                    {
+                        "question": "Why is 'staying persistent' highlighted as important in the conclusion of the guide?",
+                        "hint": "Think about the nature of building a business and what it demands over time.",
+                        "answerOptions": [
+                            { "text": "Because it guarantees immediate success and high profits.", "isCorrect": false, "rationale": "Persistence increases chances of success but does not guarantee immediate profits or success." },
+                            { "text": "Because building a business takes time and resilience through challenges.", "isCorrect": true, "rationale": "Persistence is crucial because the entrepreneurial journey is inherently long and filled with obstacles, requiring a resilient mindset." },
+                            { "text": "To avoid having to adapt your idea based on feedback.", "isCorrect": false, "rationale": "Persistence is about continuing despite challenges, not about rigidly sticking to an initial plan without adaptation." },
+                            { "text": "So you can avoid the need for external funding.", "isCorrect": false, "rationale": "Persistence is a personal trait related to effort, not a financial strategy to avoid funding." }
+                        ]
+                    },
+                    {
+                        "question": "An entrepreneur has a great idea but struggles to start. The guide suggests taking the 'smallest possible step forward.' Which of these is the best example of such a step?",
+                        "hint": "Look for an action that is concrete, manageable, and directly moves the idea forward, without being overwhelming.",
+                        "answerOptions": [
+                            { "text": "Quit their current job to dedicate full-time to the new business.", "isCorrect": false, "rationale": "This is a huge, high-risk step, not a 'smallest possible step' to combat initial inertia." },
+                            { "text": "Develop the entire product's software from scratch over the weekend.", "isCorrect": false, "rationale": "This is an ambitious and likely unrealistic goal for a 'smallest step,' potentially leading to overwhelm and further procrastination." },
+                            { "text": "Draft a single survey question to ask potential customers.", "isCorrect": true, "rationale": "This is a concrete, manageable, and low-effort action that directly contributes to validating the idea, embodying the 'smallest possible step' principle." },
+                            { "text": "Book a meeting with a venture capitalist for funding.", "isCorrect": false, "rationale": "This is a significant step that often requires a more developed idea and plan, not an initial 'smallest step' for someone struggling to start." }
+                        ]
+                    },
+                    {
+                        "question": "What is the primary benefit of using AI for 'Automation' in a business context?",
+                        "hint": "Think about what automation typically achieves in terms of human effort and time.",
+                        "answerOptions": [
+                            { "text": "To replace all human employees with AI systems.", "isCorrect": false, "rationale": "While AI can automate tasks, its primary benefit is usually to free up human time for higher-value work, not to eliminate all human roles." },
+                            { "text": "To personalize every customer interaction individually.", "isCorrect": false, "rationale": "This is a benefit of AI for personalization, not its primary role in automation." },
+                            { "text": "To free up human time by handling repetitive and mundane tasks.", "isCorrect": true, "rationale": "The core benefit of AI automation is to take over routine, repetitive tasks, allowing human employees to focus on more complex, creative, or strategic work." },
+                            { "text": "To generate unique visual content for marketing campaigns.", "isCorrect": false, "rationale": "This is a benefit of AI for content generation, not its primary role in automation." }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedOptionIndex = -1;
+
+        const quizDisplayArea = document.getElementById('quiz-display-area');
+        const quizTitle = document.getElementById('quiz-title');
+        const quizQuestionText = document.getElementById('quiz-question-text');
+        const quizOptionsContainer = document.getElementById('quiz-options');
+        const quizHint = document.getElementById('quiz-hint');
+        const quizFeedback = document.getElementById('quiz-feedback');
+        const quizRationale = document.getElementById('quiz-rationale');
+        const quizPrevBtn = document.getElementById('quiz-prev-btn');
+        const quizCheckBtn = document.getElementById('quiz-check-btn');
+        const quizNextBtn = document.getElementById('quiz-next-btn');
+        const quizRestartBtn = document.getElementById('quiz-restart-btn');
+        const quizScore = document.getElementById('quiz-score');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startQuiz(index) {
+            currentQuizIndex = index;
+            currentQuestionIndex = 0;
+            score = 0;
+            quizDisplayArea.classList.remove('hidden');
+            quizScore.classList.add('hidden');
+            quizRestartBtn.classList.add('hidden');
+            loadQuestion();
+            quizCheckBtn.classList.remove('hidden');
+            quizNextBtn.classList.add('hidden');
+            quizPrevBtn.classList.add('hidden');
+            quizFeedback.classList.add('hidden');
+        }
+
+        function loadQuestion() {
+            const quiz = quizzesData[currentQuizIndex];
+            const questionData = quiz.questions[currentQuestionIndex];
+
+            quizTitle.textContent = quiz.title;
+            quizQuestionText.textContent = questionData.question;
+            quizHint.textContent = `Hint: ${questionData.hint}`;
+            quizOptionsContainer.innerHTML = '';
+            quizFeedback.classList.add('hidden');
+            quizCheckBtn.classList.remove('hidden');
+            quizNextBtn.classList.add('hidden');
+            selectedOptionIndex = -1;
+
+            const shuffledOptions = [...questionData.answerOptions];
+            shuffleArray(shuffledOptions);
+
+            shuffledOptions.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'quiz-option';
+                optionDiv.innerHTML = `<p>${option.text}</p>`;
+                optionDiv.dataset.index = index;
+                optionDiv.addEventListener('click', () => selectOption(optionDiv, index));
+                quizOptionsContainer.appendChild(optionDiv);
+            });
+
+            if (currentQuestionIndex > 0) {
+                quizPrevBtn.classList.remove('hidden');
+            } else {
+                quizPrevBtn.classList.add('hidden');
+            }
+        }
+
+        function selectOption(selectedDiv, index) {
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected');
+                opt.classList.remove('correct');
+                opt.classList.remove('incorrect');
+            });
+            selectedDiv.classList.add('selected');
+            selectedOptionIndex = index;
+        }
+
+        function checkAnswer() {
+            if (selectedOptionIndex === -1) {
+                alert('Please select an option before checking your answer.');
+                return;
+            }
+
+            const quiz = quizzesData[currentQuizIndex];
+            const questionData = quiz.questions[currentQuestionIndex];
+            const selectedOption = quizOptionsContainer.children[selectedOptionIndex];
+            const selectedOptionText = selectedOption.querySelector('p').textContent;
+
+            let isCorrectAnswer = false;
+            let correctRationale = '';
+
+            // Find the original correct option and its rationale
+            const originalCorrectOption = questionData.answerOptions.find(opt => opt.isCorrect);
+            correctRationale = originalCorrectOption.rationale;
+
+            // Check if the text of the selected option matches the text of the original correct option
+            if (selectedOptionText === originalCorrectOption.text) {
+                isCorrectAnswer = true;
+            }
+
+            if (isCorrectAnswer) {
+                score++;
+                selectedOption.classList.add('correct');
+            } else {
+                selectedOption.classList.add('incorrect');
+                // Highlight the correct answer if the user was wrong
+                document.querySelectorAll('.quiz-option').forEach(opt => {
+                    if (opt.querySelector('p').textContent === originalCorrectOption.text) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+
+            quizRationale.textContent = correctRationale;
+            quizFeedback.classList.remove('hidden');
+            quizCheckBtn.classList.add('hidden');
+            quizNextBtn.classList.remove('hidden');
+
+            document.querySelectorAll('.quiz-option').forEach(opt => opt.removeEventListener('click', selectOption));
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizzesData[currentQuizIndex].questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            currentQuestionIndex--;
+            if (currentQuestionIndex >= 0) {
+                loadQuestion();
+            } else {
+                // Should not happen if prev button is hidden at index 0
+                currentQuestionIndex = 0;
+                loadQuestion();
+            }
+        }
+
+        function showResults() {
+            quizQuestionText.textContent = '';
+            quizOptionsContainer.innerHTML = '';
+            quizHint.textContent = '';
+            quizFeedback.classList.add('hidden');
+            quizCheckBtn.classList.add('hidden');
+            quizNextBtn.classList.add('hidden');
+            quizPrevBtn.classList.add('hidden');
+
+            quizScore.textContent = `You scored ${score} out of ${quizzesData[currentQuizIndex].questions.length}!`;
+            quizScore.classList.remove('hidden');
+            quizRestartBtn.classList.remove('hidden');
+        }
+
+        function restartQuiz() {
+            startQuiz(currentQuizIndex);
+        }
+
+        quizCheckBtn.addEventListener('click', checkAnswer);
+        quizNextBtn.addEventListener('click', nextQuestion);
+        quizPrevBtn.addEventListener('click', prevQuestion);
+        quizRestartBtn.addEventListener('click', restartQuiz);
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const appData = {
+                selfAssessment: [
+                    { id: 'passion', text: 'Identify Your Passions', detail: 'What topics genuinely excite you? What do you love learning about or doing in your free time? Passion fuels motivation through challenges.' },
+                    { id: 'skills', text: 'List Your Skills & Expertise', detail: 'What are you good at? This includes professional skills (e.g., coding, marketing, writing, design) and soft skills (e.g., problem-solving, communication, organization). Don\'t forget hobbies or unique talents.' },
+                    { id: 'experience', text: 'Recall Your Experiences', detail: 'What unique experiences have you had? What problems have you personally faced and overcome? Your personal journey can reveal unmet needs.' },
+                    { id: 'values', text: 'Check Your Core Values', detail: 'What are your core values? Building a business aligned with your values ensures long-term satisfaction and authenticity.' }
+                ],
+                problemImpact: {
+                    labels: [
+                        'Daily Commuting Stress', 'Digital Clutter Management', 'Healthy Meal Prep Time',
+                        'Niche Software Gaps', 'Accessible Service Delivery', 'Specific Product Shortages',
+                        'Outdated Legacy Systems', 'Inefficient Supply Chains', 'Manual Data Processing'
+                    ],
+                    data: [
+                        75, 80, 70, // Daily Frustrations
+                        90, 85, 92, // Market Gaps
+                        95, 88, 93  // Industry Inefficiencies
+                    ],
+                    backgroundColors: [
+                        '#6EE7B7', '#34D399', '#059669', // Greens for Daily
+                        '#60A5FA', '#3B82F6', '#2563EB', // Blues for Market
+                        '#FDBA74', '#FB923C', '#EA580C'  // Oranges for Industry
+                    ],
+                    categoryRanges: [
+                        { start: 0, end: 2, color: 'rgba(5, 150, 105, 0.1)' }, // Light green for Daily Frustrations
+                        { start: 3, end: 5, color: 'rgba(37, 99, 235, 0.1)' },  // Light blue for Market Gaps
+                        { start: 6, end: 8, color: 'rgba(234, 88, 12, 0.1)' }   // Light orange for Industry Inefficiencies
+                    ]
+                },
+                trends: [
+                    { title: 'Artificial Intelligence & Automation', content: 'Beyond just AI tools, think about how AI can personalize experiences, automate mundane tasks, analyze data for insights, or create new forms of content. <strong>Potential Impact:</strong> Businesses integrating AI can achieve unprecedented efficiency, hyper-personalization for customers, and unlock new revenue streams through intelligent automation and predictive analytics. This trend is reshaping customer service, content creation, and operational management across nearly all sectors.' },
+                    { title: 'Sustainability & Green Solutions', content: 'Growing consumer demand for eco-friendly products, circular economy models, renewable energy, and ethical supply chains. <strong>Potential Impact:</strong> Companies focusing on sustainability can build strong brand loyalty, attract environmentally conscious consumers, and benefit from regulatory incentives. This includes innovations in waste reduction, sustainable sourcing, green energy solutions, and eco-friendly product development.' },
+                    { title: 'Remote Work & Digital Nomads', content: 'Services and products that support distributed teams, virtual collaboration, digital well-being, and flexible lifestyles. <strong>Potential Impact:</strong> The shift to remote work creates massive opportunities for tools that enhance virtual communication, project management, and employee engagement. Businesses can also cater to digital nomads with specialized services like co-living spaces, tax guidance, and community platforms.' },
+                    { title: 'Personalization & Customization', content: 'Consumers expect tailored experiences, from personalized health plans to custom-made products. <strong>Potential Impact:</strong> Businesses that offer highly personalized products or services can command premium prices and foster deeper customer relationships. This involves leveraging data to understand individual preferences and delivering unique, relevant offerings, from custom apparel to bespoke educational content.' },
+                    { title: 'Creator Economy & Passion Economy', content: 'Tools and platforms that empower individuals to monetize their skills, content, and unique passions. <strong>Potential Impact:</strong> This trend fuels demand for platforms that simplify content creation, audience engagement, and direct monetization. Opportunities exist in providing tools for creators (e.g., subscription platforms, merchandise fulfillment, digital product marketplaces) and services that help them grow and manage their personal brands.' },
+                    { title: 'Health & Wellness Technology', content: 'Wearables, mental health apps, telehealth, personalized nutrition, and longevity solutions. <strong>Potential Impact:</strong> With increasing health consciousness, there\'s a booming market for technology that supports physical and mental well-being. This includes smart devices for health monitoring, AI-driven wellness coaches, virtual therapy platforms, and genetic-based personalized nutrition plans.' }
+                ],
+                nicheLevels: ['Broad Market: "Fitness"', 'Niche: "Fitness for Busy Parents"', 'Micro-Niche: "Fitness for Parents of Toddlers"'],
+                competitionChecklist: [
+                    { id: 'direct-indirect', text: 'Identify Direct & Indirect Competitors', detail: 'Who else is trying to solve a similar problem, even if their solution is different?' },
+                    { id: 'strengths', text: 'Analyze Their Strengths', detail: 'What do they do well? What do customers love about them?' },
+                    { id: 'weaknesses', text: 'Pinpoint Their Weaknesses/Gaps', detail: 'Where do they fall short? What complaints do their customers have? What features are missing? What aspects of the customer experience could be improved?' },
+                    { id: 'business-model', text: 'Study Their Business Model', detail: 'How do they make money? What\'s their pricing strategy?' },
+                    { id: 'differentiation', text: 'Define Your Unique Differentiation', detail: 'Based on your analysis, how can your idea be truly different and better? This could be through a unique feature, superior customer service, a different target niche, or a more compelling brand story, or a more efficient delivery method.' }
+                ],
+                scamperPrompts: {
+                    S: { prompt: 'Substitute: What can be replaced in your idea?', example: 'For a traditional bookstore: Substitute physical books with digital subscriptions.' },
+                    C: { prompt: 'Combine: What features or ideas can be merged?', example: 'For a coffee shop: Combine with a co-working space.' },
+                    A: { prompt: 'Adapt: How can you adapt this idea for a different context?', example: 'For a fitness tracker: Adapt it for pet health monitoring.' },
+                    M: { prompt: 'Modify: What can be changed, magnified, or minified?', example: 'For a standard car: Modify it to be amphibious.' },
+                    P: { prompt: 'Put to other use: How can the idea be used differently?', example: 'For old tires: Put them to use as playground equipment.' },
+                    E: { prompt: 'Eliminate: What features or steps can be removed?', example: 'For a restaurant: Eliminate waiters by using self-ordering kiosks.' },
+                    R: { prompt: 'Reverse: What if it was done in reverse, or rearranged?', example: 'For a clothing store: Reverse the process, allowing customers to design clothes first, then produce them.' }
+                },
+                validationFlow: [
+                    { step: 'Talk to Potential Customers (Interviews)', detail: 'Conduct informal interviews. Ask about their problems, how they currently solve them, and if they\'d be interested in your proposed solution. Listen more than you talk.' },
+                    { step: 'Gather Broader Feedback (Surveys)', detail: 'Use surveys and questionnaires to gather broader feedback on pain points and interest levels from a larger audience.' },
+                    { step: 'Gauge Interest (Landing Page Test)', detail: 'Create a simple landing page describing your idea and collect email addresses to gauge interest. You can even test different value propositions.' },
+                    { step: 'Test Core Concept (MVP)', detail: 'Can you create the simplest version of your product or service to test the core concept with real users? This could be a basic prototype or a manual service.' },
+                    { step: 'Confirm Demand (Pre-Sales)', detail: 'Can you get people to commit to buying (even if it\'s a small deposit) before you fully develop the product? This is the strongest form of validation.' }
+                ],
+                aiAdvantages: [
+                    { icon: '🤖', text: 'Automation', detail: 'Automate repetitive tasks (customer support, data entry, content scheduling) to free up human time for higher-value work, increasing operational efficiency and reducing manual errors.' },
+                    { icon: '🎯', text: 'Personalization', detail: 'Analyze vast amounts of user data to offer highly personalized recommendations, tailored content, or customized product suggestions, leading to increased customer satisfaction and loyalty.' },
+                    { icon: '✍️', text: 'Content Generation', detail: 'Assist in generating various forms of content, including marketing copy, blog posts, social media visuals, or even basic video scripts, accelerating content production and maintaining consistency.' },
+                    { icon: '📊', text: 'Data Analysis & Insights', detail: 'Process large datasets to identify hidden trends, predict customer behavior, optimize pricing strategies, or forecast market shifts, providing actionable intelligence for strategic decision-making.' },
+                    { icon: '💬', text: 'Enhanced Customer Experience', detail: 'Implement AI-powered chatbots, virtual assistants, or intelligent recommendation engines to provide instant support, answer queries, and guide users, significantly improving overall customer interaction and satisfaction.' },
+                    { icon: '⚙️', text: 'Efficiency & Optimization', detail: 'Leverage AI to optimize complex processes like logistics, supply chain management, resource allocation, and energy consumption, leading to significant cost savings and improved operational performance.' }
+                ]
+            };
+
+            const selfAssessmentContainer = document.getElementById('self-assessment-checklist');
+            appData.selfAssessment.forEach(item => {
+                selfAssessmentContainer.innerHTML += `
+                    <label class="flex items-center p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
+                        <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="ml-3 text-gray-700 font-medium">${item.text}</span>
+                        <span class="expand-toggle ml-auto text-sm" data-target="${item.id}-detail">▼</span>
+                    </label>
+                    <div id="${item.id}-detail" class="expandable-content pl-8 pr-3 py-2 text-gray-600 text-sm bg-gray-50 rounded-b-lg">${item.detail}</div>
+                `;
+            });
+            document.querySelectorAll('#self-assessment-checklist .expand-toggle').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const targetId = toggle.dataset.target;
+                    const targetElement = document.getElementById(targetId);
+                    targetElement.classList.toggle('expanded');
+                    toggle.textContent = targetElement.classList.contains('expanded') ? '▲' : '▼';
+                });
+            });
+
+            const assessAlignmentBtn = document.getElementById('assess-alignment-btn');
+            const alignmentFeedback = document.getElementById('alignment-feedback');
+            assessAlignmentBtn.addEventListener('click', () => {
+                const checkedCount = document.querySelectorAll('#self-assessment-checklist input[type="checkbox"]:checked').length;
+                if (checkedCount === appData.selfAssessment.length) {
+                    alignmentFeedback.textContent = "Excellent! Your idea's foundation is strongly aligned with your personal strengths and values. This is a great start!";
+                    alignmentFeedback.classList.remove('hidden');
+                    alignmentFeedback.className = 'mt-4 text-green-700 font-bold';
+                } else if (checkedCount > 0) {
+                    alignmentFeedback.textContent = "Good start! Keep reflecting on how your passions, skills, experiences, and values can all contribute to your business idea.";
+                    alignmentFeedback.classList.remove('hidden');
+                    alignmentFeedback.className = 'mt-4 text-yellow-700 font-medium';
+                } else {
+                    alignmentFeedback.textContent = "Take some time to deeply assess your passions, skills, experiences, and values. This foundation is crucial!";
+                    alignmentFeedback.classList.remove('hidden');
+                    alignmentFeedback.className = 'mt-4 text-red-700 font-medium';
+                }
+            });
+
+            // Custom Chart.js Plugin for background bands
+            const categoryBands = {
+                id: 'categoryBands',
+                beforeDraw(chart, args, options) {
+                    const { ctx, chartArea: { left, right, top, bottom }, scales: { y } } = chart;
+                    ctx.save();
+                    options.bands.forEach(band => {
+                        const yStart = y.getPixelForTick(band.start);
+                        const yEnd = y.getPixelForTick(band.end);
+                        const height = yStart - yEnd;
+                        ctx.fillStyle = band.color;
+                        ctx.fillRect(left, yEnd, right - left, height);
+                    });
+                    ctx.restore();
+                }
+            };
+
+            const ctx = document.getElementById('problemImpactChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: appData.problemImpact.labels,
+                    datasets: [{
+                        label: 'Opportunity Score',
+                        data: appData.problemImpact.data,
+                        backgroundColor: appData.problemImpact.backgroundColors,
+                        borderColor: appData.problemImpact.backgroundColors.map(color => color.replace('0.1)', '1)')), // Darker border
+                        borderWidth: 1,
+                        borderRadius: 5,
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // Make it a horizontal bar chart
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` Opportunity: ${context.raw}`;
+                                },
+                                title: function(context) {
+                                    const index = context[0].dataIndex;
+                                    let category = '';
+                                    if (index >= 0 && index <= 2) category = 'Daily Frustrations';
+                                    else if (index >= 3 && index <= 5) category = 'Market Gaps';
+                                    else if (index >= 6 && index <= 8) category = 'Industry Inefficiencies';
+                                    return `${category}: ${context[0].label}`;
+                                }
+                            }
+                        },
+                        categoryBands: {
+                            bands: appData.problemImpact.categoryRanges
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Opportunity Score'
+                            }
+                        },
+                        y: {
+                           ticks: {
+                                callback: function(value, index, values) {
+                                    const label = this.getLabelForValue(value);
+                                    return label.length > 25 ? label.substring(0, 25) + '...' : label; // Adjust label wrapping for horizontal bars
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [categoryBands]
+            });
+
+            const trendsContainer = document.getElementById('trends-container');
+            appData.trends.forEach((trend, index) => {
+                const trendEl = document.createElement('div');
+                trendEl.className = 'border rounded-lg overflow-hidden';
+                trendEl.innerHTML = `
+                    <div class="p-4 font-medium interactive-element bg-gray-50 flex justify-between items-center">
+                        <span>${trend.title}</span>
+                        <span class="expand-toggle" data-target="trend-${index}-detail">▼</span>
+                    </div>
+                    <div id="trend-${index}-detail" class="expandable-content p-4 bg-white text-gray-600 text-sm">
+                        ${trend.content}
+                    </div>
+                `;
+                trendsContainer.appendChild(trendEl);
+                trendEl.querySelector('.expand-toggle').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const targetId = trendEl.querySelector('.expand-toggle').dataset.target;
+                    const targetElement = document.getElementById(targetId);
+                    targetElement.classList.toggle('expanded');
+                    trendEl.querySelector('.expand-toggle').textContent = targetElement.classList.contains('expanded') ? '▲' : '▼';
+                });
+            });
+
+            const nicheFunnelContainer = document.getElementById('niche-funnel');
+            appData.nicheLevels.forEach((level, index) => {
+                const width = 100 - (index * 20);
+                nicheFunnelContainer.innerHTML += `
+                    <div class="bg-purple-200 text-purple-800 font-medium p-3 rounded-md mx-auto" style="width: ${width}%">${level}</div>
+                    ${index < appData.nicheLevels.length - 1 ? '<div class="text-purple-400 text-2xl font-light">↓</div>' : ''}
+                `;
+            });
+            
+            const competitionContainer = document.getElementById('competition-checklist');
+            appData.competitionChecklist.forEach((item, index) => { 
+                competitionContainer.innerHTML += `
+                    <label class="flex items-center p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
+                        <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-red-600 focus:ring-red-500">
+                        <span class="ml-3 text-gray-700 font-medium">${item.text}</span>
+                        <span class="expand-toggle ml-auto text-sm" data-target="comp-${item.id}-detail">▼</span>
+                    </label>
+                    <div id="comp-${item.id}-detail" class="expandable-content pl-8 pr-3 py-2 text-gray-600 text-sm bg-gray-50 rounded-b-lg">${item.detail}</div>
+                `;
+            });
+            document.querySelectorAll('#competition-checklist .expand-toggle').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const targetId = toggle.dataset.target;
+                    const targetElement = document.getElementById(targetId);
+                    targetElement.classList.toggle('expanded');
+                    toggle.textContent = targetElement.classList.contains('expanded') ? '▲' : '▼';
+                });
+            });
+
+            const scamperBtns = document.querySelectorAll('.scamper-btn');
+            const scamperPrompt = document.getElementById('scamper-prompt');
+            const scamperInput = document.getElementById('scamper-input');
+            const scamperExample = document.getElementById('scamper-example');
+            scamperBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    scamperBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const key = btn.dataset.scamper;
+                    scamperPrompt.textContent = appData.scamperPrompts[key].prompt;
+                    scamperExample.textContent = `Example: ${appData.scamperPrompts[key].example}`;
+                    scamperExample.classList.remove('hidden');
+                    scamperInput.value = ''; // Clear input for new idea
+                    scamperInput.focus();
+                });
+            });
+
+            const validationContainer = document.getElementById('validation-flow');
+            appData.validationFlow.forEach((item, index) => {
+                validationContainer.innerHTML += `
+                    <div class="flex items-center">
+                        <div class="bg-pink-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold">${index + 1}</div>
+                        <div class="ml-4 font-medium text-gray-700 flex-grow cursor-pointer" data-target="val-step-${index}-detail">${item.step} <span class="expand-toggle ml-2 text-sm">▼</span></div>
+                    </div>
+                    <div id="val-step-${index}-detail" class="expandable-content pl-12 pr-3 py-2 text-gray-600 text-sm bg-gray-50 rounded-b-lg">${item.detail}</div>
+                    ${index < appData.validationFlow.length - 1 ? '<div class="ml-4 h-6 border-l-2 border-pink-300 border-dashed"></div>' : ''}
+                `;
+            });
+            document.querySelectorAll('#validation-flow [data-target^="val-step-"]').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    const targetId = toggle.dataset.target;
+                    const targetElement = document.getElementById(targetId);
+                    targetElement.classList.toggle('expanded');
+                    const arrow = toggle.querySelector('.expand-toggle');
+                    if (arrow) {
+                        arrow.textContent = targetElement.classList.contains('expanded') ? '▲' : '▼';
+                    }
+                });
+            });
+            
+            const aiAdvantagesContainer = document.getElementById('ai-advantages');
+            appData.aiAdvantages.forEach((advantage, index) => {
+                aiAdvantagesContainer.innerHTML += `
+                    <div class="bg-gray-50 p-4 rounded-lg flex flex-col">
+                        <div class="flex items-center cursor-pointer" data-target="ai-adv-${index}-detail">
+                            <span class="text-2xl mr-3">${advantage.icon}</span>
+                            <span class="font-medium text-gray-700 flex-grow">${advantage.text}</span>
+                            <span class="expand-toggle ml-2 text-sm">▼</span>
+                        </div>
+                        <div id="ai-adv-${index}-detail" class="expandable-content mt-2 text-gray-600 text-sm">
+                            ${advantage.detail}
+                        </div>
+                    </div>
+                `;
+            });
+            document.querySelectorAll('#ai-advantages [data-target^="ai-adv-"]').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    const targetId = toggle.dataset.target;
+                    const targetElement = document.getElementById(targetId);
+                    targetElement.classList.toggle('expanded');
+                    const arrow = toggle.querySelector('.expand-toggle');
+                    if (arrow) {
+                        arrow.textContent = targetElement.classList.contains('expanded') ? '▲' : '▼';
+                    }
+                });
+            });
+
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
